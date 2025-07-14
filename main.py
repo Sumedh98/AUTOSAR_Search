@@ -29,8 +29,11 @@ class Question(BaseModel):
 
 @app.post("/ask")
 async def ask_question(q: Question):
-    answer = AskGemeni(q.question)
-    return {"answer": answer}
+    try:
+        answer = AskGemeni(q.question)
+        return {"answer": answer}
+    except Exception as e:
+        return{"error": str(e)}
     
 @app.get("/")
 def read_index():
