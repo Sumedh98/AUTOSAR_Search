@@ -1,0 +1,120 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gemini Answerer</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9f9fb;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+
+    .container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      width: 90%;
+      max-width: 600px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #5a67d8;
+    }
+
+    button {
+      width: 100%;
+      background: #5a67d8;
+      color: white;
+      border: none;
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #434190;
+    }
+
+    .response {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #f0f4ff;
+      border-left: 4px solid #5a67d8;
+      border-radius: 0.5rem;
+      white-space: pre-wrap;
+      font-size: 1rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>AUTOSAR Search</h1>
+  <div class="container">
+    <input type="text" id="questionInput" placeholder="Enter your question..." />
+    <button onclick="submitQuestion()">Get Answer</button>
+    <div id="responseBox" class="response" style="display:none;"></div>
+  </div>
+
+  <script>
+    async function submitQuestion() {
+      const input = document.getElementById("questionInput").value;
+      const responseBox = document.getElementById("responseBox");
+
+      if (!input.trim()) return;
+
+      responseBox.style.display = "block";
+      responseBox.innerText = "Loading...";
+
+      try {
+        const res = await fetch("http://localhost:8000/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: input }),
+        });
+
+        const data = await res.json();
+        const markdown = data.answer || "No response received.";
+
+         // Convert markdown to HTML
+        responseBox.innerHTML = marked.parse(markdown);
+      } catch (err) {
+        responseBox.innerText = "Error fetching answer.";
+      }
+    }
+  </script>
+</body>
+</html>
