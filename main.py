@@ -28,6 +28,11 @@ class Question(BaseModel):
 async def ask_question(q: Question):
     answer = AskGemeni(q.question)
     return {"answer": answer}
+    
+@app.get("/")
+def read_index():
+    return FileResponse("index.html")  # Ensure this path is correct
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
