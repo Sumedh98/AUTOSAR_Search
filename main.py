@@ -31,7 +31,7 @@ async def ask_question(q: Question):
     
 @app.get("/")
 def read_index():
-    return FileResponse("index.html")  # Ensure this path is correct
+    return FileResponse("static/index.html")  # Ensure this path is correct
 
 
 if __name__ == "__main__":
