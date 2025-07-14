@@ -1,9 +1,12 @@
 # main.py
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import uvicorn
 from get_response_gemeni import AskGemeni
+import os
 
 # Replace this with your actual Gemini model code
 def get_answer_from_gemini(question: str) -> str:
