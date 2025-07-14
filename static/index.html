@@ -112,7 +112,7 @@
          // Convert markdown to HTML
         responseBox.innerHTML = marked.parse(markdown);
       } catch (err) {
-        responseBox.innerText = "Error fetching answer.";
+        responseBox.innerText = `Error fetching answer: ${err.message || err}`;
       }
     }
   </script>
