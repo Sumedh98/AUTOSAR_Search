@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+chromadb
+google-generativeai
+google-genai
+langchain
+PySide6
+markdown
