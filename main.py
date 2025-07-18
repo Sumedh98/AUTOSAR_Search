@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import uvicorn
-from get_response_gemeni import AskGemeni
+from get_response_gemeni import AskGemeni, AskRequirements
 import os
 
 # Replace this with your actual Gemini model code
@@ -35,9 +35,17 @@ async def ask_question(q: Question):
     except Exception as e:
         return{"error": str(e)}
     
+@app.post("/requirements")
+async def ask_requirements(q: Question):
+    try:
+        answer = AskRequirements(q.question)
+        return {"answer": answer}
+    except Exception as e:
+        return{"error": str(e)}
+    
 @app.get("/")
 def read_index():
-    return FileResponse("static/index.html")  # Ensure this path is correct
+    return FileResponse("static/index.html")
 
 
 if __name__ == "__main__":

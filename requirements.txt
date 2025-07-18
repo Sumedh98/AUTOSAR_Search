@@ -6,3 +6,5 @@ google-genai
 langchain
 PySide6
 markdown
+langchain-community
+pypdf

@@ -5,7 +5,7 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AUTOSAR Search</title>
+  <title>Search</title>
   <style>
     * {
       box-sizing: border-box;
@@ -82,25 +82,66 @@
   </style>
 </head>
 <body>
-  <h1>AUTOSAR Search</h1>
+  <h1>Search</h1>
   <div class="container">
+    <div style="margin-bottom: 1rem;">
+      <label>
+        <input type="checkbox" id="su17Checkbox" onclick="toggleCheckbox('su17')">
+        Ask question about SU17 Requirement
+      </label>
+      <br>
+      <label>
+        <input type="checkbox" id="autosarCheckbox" onclick="toggleCheckbox('autosar')">
+        Ask question about AUTOSAR
+      </label>
+    </div>
     <input type="text" id="questionInput" placeholder="Enter your question..." />
     <button onclick="submitQuestion()">Get Answer</button>
     <div id="responseBox" class="response" style="display:none;"></div>
   </div>
+  <!-- <div class="container">
+    <input type="text" id="questionInput" placeholder="Enter your question..." />
+    <button onclick="submitQuestion()">Get Answer</button>
+    <div id="responseBox" class="response" style="display:none;"></div>
+  </div> -->
 
   <script>
+    function toggleCheckbox(type) {
+      const su17 = document.getElementById("su17Checkbox");
+      const autosar = document.getElementById("autosarCheckbox");
+      if (type === 'su17' && su17.checked) {
+        autosar.checked = false;
+      }
+      if (type === 'autosar' && autosar.checked) {
+        su17.checked = false;
+      }
+    }
     async function submitQuestion() {
       const input = document.getElementById("questionInput").value;
       const responseBox = document.getElementById("responseBox");
+      const su17 = document.getElementById("su17Checkbox").checked;
+      const autosar = document.getElementById("autosarCheckbox").checked;
 
       if (!input.trim()) return;
+      // Ensure one is selected
+      if (!su17 && !autosar) {
+        responseBox.style.display = "block";
+        responseBox.innerText = "Please select a topic before asking.";
+        return;
+      }
 
       responseBox.style.display = "block";
       responseBox.innerText = "Loading...";
 
+      let url = "";
+      if (su17) {
+        url = "http://localhost:8000/requirements";
+      } else if (autosar) {
+        url = "http://localhost:8000/ask";
+      }
+
       try {
-        const res = await fetch("/ask", {
+        const res = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ question: input }),
